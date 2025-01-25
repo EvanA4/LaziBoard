@@ -25,6 +25,7 @@
                     bsec -= .1;
 
                     if (bsec < 0) {
+                        bsec = 0;
                         isGameOver = 2;
                         clearInterval(timerInterval);
                     }
@@ -34,6 +35,7 @@
                     wsec -=.1;
 
                     if (wsec < 0) {
+                        wsec = 0;
                         isGameOver = 2;
                         clearInterval(timerInterval);
                     }
@@ -66,6 +68,7 @@
         chess.reset();
         isGameOver = 0;
         started = false;
+        paused = false;
         bsec = 300;
         wsec = 300;
     }
@@ -84,32 +87,38 @@
 
 <p class="text-center text-[50px] text-white mt-10"><b>This is LaziBoard</b></p>
 
-<div class="w-[100vw] flex justify-center mt-10">
-    <div class="w-[30vw] relative">
-        {#if isGameOver || !started}
-            <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center">
-                {#if isGameOver}
-                    <p class="text-white text-3xl">{getWinner(turn, isGameOver)} wins!</p>
-                    <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
-                {:else}
-                    <button onclick={startGame} class="px-5 py-2 rounded-lg mt-5 bg-green-600 hover:bg-green-500 text-white">Start</button>
-                {/if}
-            </div>
-        {/if}
-        {#if paused}
-            <div class="absolute top-0 left-0 w-[100%] h-[100%] z-10"></div>
-        {/if}
-        <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn}/>
-    </div>
-    <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
-        <p class="text-white text-[40px]">{timerString(bsec)}</p>
-        <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-[100%]">
-            {#if paused}
-                <PlayImg />
-            {:else}    
-                <PauseImg />
+<div class="flex flex-col items-center">
+    <div class="w-[100vw] flex justify-center mt-10">
+        <div class="w-[30vw] relative">
+            {#if isGameOver || !started}
+                <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center">
+                    {#if isGameOver}
+                        <p class="text-white text-3xl">{getWinner(turn, isGameOver)} wins!</p>
+                        <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
+                    {:else}
+                        <button onclick={startGame} class="px-5 py-2 rounded-lg mt-5 bg-green-600 hover:bg-green-500 text-white">Start</button>
+                    {/if}
+                </div>
             {/if}
-        </button>
-        <p class="text-white text-[40px]">{timerString(wsec)}</p>
+            {#if paused}
+                <div class="absolute top-0 left-0 w-[100%] h-[100%] z-10"></div>
+            {/if}
+            <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn}/>
+        </div>
+        <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
+            <p class="text-white text-[40px]">{timerString(bsec)}</p>
+            <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-[100%]">
+                {#if paused}
+                    <PlayImg />
+                {:else}    
+                    <PauseImg />
+                {/if}
+            </button>
+            <p class="text-white text-[40px]">{timerString(wsec)}</p>
+        </div>
     </div>
+
+    {#if started && !isGameOver}
+        <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
+    {/if}
 </div>
