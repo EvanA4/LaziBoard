@@ -4,12 +4,43 @@
 	import { onMount } from 'svelte';
 	import type { Color } from 'chess.js';
 
-    let isGameOver = $state<boolean | undefined>();
-    let turn = $state<Color | undefined>();
+    import PauseImg from '$lib/assets/svgs/pause.svelte';
+    import PlayImg from '$lib/assets/svgs/play.svelte';
 
+    // set whygameover to 1 in event listener for board-based conclusion; time-based conclusion sets whygameover to 2; 0 means not game over
+    let isGameOver = $state<number>(0);
+    let turn = $state<Color | undefined>();
+    let started = $state<boolean>(false);
+    let paused = $state<boolean>(false);
+
+    let bsec = $state<number>(300);
+    let wsec = $state<number>(300);
+
+    let timerInterval: ReturnType<typeof setInterval>;
     let chess: any;
     onMount(() => {
-        chess.load("r1bqkb1r/pppp1Qpp/2n2n2/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4")
+        timerInterval = setInterval(() => {
+            if (started && !paused) {
+                if (turn == "b") {
+                    bsec -= .1;
+
+                    if (bsec < 0) {
+                        isGameOver = 2;
+                        clearInterval(timerInterval);
+                    }
+                }
+
+                else {
+                    wsec -=.1;
+
+                    if (wsec < 0) {
+                        isGameOver = 2;
+                        clearInterval(timerInterval);
+                    }
+                }
+
+            }
+        }, 100)
     })
 
     function moveListener(event: any) {
@@ -17,21 +48,65 @@
         console.log( `${move.color} played ${move.san}` );
     }
 
-    // function gameOverListener(event: any) {
-    //     console.log(`${winner} wins!`);
-    // }
+    function startGame() {
+        started = true;
+    }
+
+    function gameOverListener(event: any) {
+        isGameOver = 1;
+        clearInterval(timerInterval);
+    }
+
+    function getWinner(turn: Color | undefined, isGameOver: number) {
+        if (turn == "w") return "Black";
+        return "White";
+    }
+
+    function resetGame() {
+        chess.reset();
+        isGameOver = 0;
+        started = false;
+        bsec = 300;
+        wsec = 300;
+    }
+
+    function timerString(sec: number) {
+        let mins = Math.floor(sec / 60);
+        let secs = sec % 60;
+        
+        if (mins == 0) return secs.toFixed(1);
+        else {
+            if (secs < 10) return `${mins}:0${secs.toFixed(1)}`;
+            else return `${mins}:${secs.toFixed(1)}`;
+        }
+    }
 </script>
 
 <p class="text-center text-[50px] text-white mt-10"><b>This is LaziBoard</b></p>
 
 <div class="w-[100vw] flex justify-center mt-10">
     <div class="w-[30vw] relative">
-        {#if isGameOver}
+        {#if isGameOver || !started}
             <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center">
-                <p class="text-white text-3xl">{turn == "b" ? "White" : "Black"} wins!</p>
-                <button onclick={() => chess.reset()} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
+                {#if isGameOver}
+                    <p class="text-white text-3xl">{getWinner(turn, isGameOver)} wins!</p>
+                    <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
+                {:else}
+                    <button onclick={startGame} class="px-5 py-2 rounded-lg mt-5 bg-green-600 hover:bg-green-500 text-white">Start</button>
+                {/if}
             </div>
         {/if}
-        <Chess class="cg-paper" on:move={moveListener} bind:this={chess} bind:turn={turn} bind:isGameOver={isGameOver}/>
+        <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn}/>
+    </div>
+    <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
+        <p class="text-white text-[40px]">{timerString(bsec)}</p>
+        <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-[100%]">
+            {#if paused}
+                <PlayImg />
+            {:else}    
+                <PauseImg />
+            {/if}
+        </button>
+        <p class="text-white text-[40px]">{timerString(wsec)}</p>
     </div>
 </div>
