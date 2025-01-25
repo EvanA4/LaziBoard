@@ -12,6 +12,7 @@
     let turn = $state<Color | undefined>();
     let started = $state<boolean>(false);
     let paused = $state<boolean>(false);
+    let playerTeam = $state<string>("w");
 
     let bsec = $state<number>(300);
     let wsec = $state<number>(300);
@@ -84,6 +85,12 @@
             else return `${mins}:${secs.toFixed(1)}`;
         }
     }
+
+    function changeTeams() {
+        chess.toggleOrientation();
+        if (playerTeam == "w") playerTeam = "b";
+        else playerTeam = "w";
+    }
 </script>
 
 <p class="text-center text-[50px] text-white mt-10"><b>This is LaziBoard</b></p>
@@ -97,7 +104,13 @@
                         <p class="text-white text-3xl">{getWinner(turn, isGameOver)} wins!</p>
                         <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
                     {:else}
-                        <button onclick={startGame} class="px-5 py-2 rounded-lg mt-5 bg-green-600 hover:bg-green-500 text-white">Start</button>
+                        <div>
+                            <p class="text-white text-[30px] text-center">Play as <b>{playerTeam == "w" ? "White" : "Black"}</b></p>
+                            <div>
+                                <button onclick={startGame} class="px-5 py-2 rounded-lg mt-5 bg-green-600 hover:bg-green-500 text-white">Start</button>
+                                <button onclick={changeTeams} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Change Teams</button>
+                            </div>
+                        </div>
                     {/if}
                 </div>
             {/if}
@@ -107,7 +120,7 @@
             <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn}/>
         </div>
         <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
-            <p class="text-white text-[40px]">{timerString(bsec)}</p>
+            <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
             <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-[100%]">
                 {#if paused}
                     <PlayImg />
@@ -115,7 +128,7 @@
                     <PauseImg />
                 {/if}
             </button>
-            <p class="text-white text-[40px]">{timerString(wsec)}</p>
+            <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? wsec : bsec)}</p>
         </div>
     </div>
 
