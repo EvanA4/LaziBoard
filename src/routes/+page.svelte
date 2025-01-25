@@ -96,6 +96,9 @@
                 {/if}
             </div>
         {/if}
+        {#if paused}
+            <div class="absolute top-0 left-0 w-[100%] h-[100%] z-10"></div>
+        {/if}
         <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn}/>
     </div>
     <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
