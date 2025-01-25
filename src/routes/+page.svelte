@@ -1,2 +1,12 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+    import {Chess} from 'svelte-chess';
+    import '$lib/chessStyle.css';
+</script>
+
+<p>welcome to root</p>
+
+<div class="w-[100vw] flex justify-center">
+    <div class="w-[30vw]">
+        <Chess class="cg-paper"/>
+    </div>
+</div>
