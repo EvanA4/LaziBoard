@@ -18,6 +18,7 @@
 
     let timerInterval: ReturnType<typeof setInterval>;
     let chess: any;
+
     onMount(() => {
         timerInterval = setInterval(() => {
             if (started && !paused) {
