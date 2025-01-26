@@ -138,6 +138,8 @@
             {/if}
             <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn} bind:fen={fen}/>
         </div>
+
+
         <div class="bg-neutral-900 h-[90vh] p-10 flex flex-col justify-between items-center">
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
 
