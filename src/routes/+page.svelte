@@ -7,6 +7,7 @@
 
     import PauseImg from '$lib/assets/svgs/pause.svelte';
     import PlayImg from '$lib/assets/svgs/play.svelte';
+    import RestartImg from '$lib/assets/svgs/restart.svelte';
 
     // set whygameover to 1 in event listener for board-based conclusion; time-based conclusion sets whygameover to 2; 0 means not game over
     let isGameOver = $state<number>(0);
@@ -139,18 +140,23 @@
         </div>
         <div class="bg-neutral-900 h-[90vh] p-10 flex flex-col justify-between items-center">
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
-            <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-[100%]">
-                {#if paused}
-                    <PlayImg />
-                {:else}    
-                    <PauseImg />
+
+            <div class="flex flex-col items-center gap-5">
+                <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-100">
+                    {#if paused}
+                        <PlayImg />
+                    {:else}    
+                        <PauseImg />
+                    {/if}
+                </button>
+                {#if started && !isGameOver}
+                    <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 opacity-70 hover:opacity-100 text-white hover:animate-spin">
+                        <RestartImg />
+                    </button>
                 {/if}
-            </button>
+            </div>
+
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? wsec : bsec)}</p>
         </div>
     </div>
-
-    {#if started && !isGameOver}
-        <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
-    {/if}
 </div>
