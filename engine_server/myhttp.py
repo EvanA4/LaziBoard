@@ -27,12 +27,14 @@ signal.signal(signal.SIGINT, handler)
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(202)
+        self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         query = parse_qs(urlparse(self.path).query)
-        print("fen:", query["fen"][0])
-        print("wtime:", query["wtime"][0])
-        print("btime:", query["btime"][0])
-        move = myengine.search(query["fen"][0], float(query["wtime"][0]), float(query["btime"][0]))
+        if "move" in query:
+            move = myengine.search(query["fen"][0], float(query["wtime"][0]), float(query["btime"][0]), query["move"][0])
+        else:
+            move = myengine.search(query["fen"][0], float(query["wtime"][0]), float(query["btime"][0]), "")
+        print("Sending", move)
         self.wfile.write(bytes(move, encoding="utf-8"))
 
 

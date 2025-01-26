@@ -11,6 +11,7 @@
     // set whygameover to 1 in event listener for board-based conclusion; time-based conclusion sets whygameover to 2; 0 means not game over
     let isGameOver = $state<number>(0);
     let turn = $state<Color | undefined>();
+    let fen = $state<string>("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     let started = $state<boolean>(false);
     let paused = $state<boolean>(false);
     let playerTeam = $state<string>("w");
@@ -48,13 +49,31 @@
         }, 100)
     })
 
-    function moveListener(event: any) {
-        const move = event.detail;
-        console.log( `${move.color} played ${move.san}` );
+    async function moveListener(event: any) {
+        // console.log(turn, playerTeam);
+
+        // check if bot needs to play
+        if (playerTeam == turn) {
+            // console.log("I'm running!");
+            const move = event.detail;
+            let newmove = await search(fen, wsec, bsec, move.san);
+            chess.move(newmove);
+        }
+
+        // const move = event.detail;
+        // console.log( `${move.color} played ${move.san}` );
     }
 
-    function startGame() {
+    async function startGame() {
         started = true;
+        // console.log(turn, playerTeam);
+
+        // check if bot needs to play
+        if (playerTeam != turn) {
+            // console.log("I'm running at start!");
+            let newmove = await search(fen, wsec, bsec, "");
+            chess.move(newmove);
+        }
     }
 
     function gameOverListener(event: any) {
@@ -115,10 +134,10 @@
                     {/if}
                 </div>
             {/if}
-            {#if paused}
+            {#if paused || playerTeam != turn}
                 <div class="absolute top-0 left-0 w-[100%] h-[100%] z-10"></div>
             {/if}
-            <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn}/>
+            <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn} bind:fen={fen}/>
         </div>
         <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
