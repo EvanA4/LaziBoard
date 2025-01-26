@@ -113,11 +113,9 @@
     }
 </script>
 
-<p class="text-center text-[50px] text-white mt-10"><b>This is LaziBoard</b></p>
-
-<div class="flex flex-col items-center">
-    <div class="w-[100vw] flex justify-center mt-10">
-        <div class="w-[30vw] relative">
+<div class="flex flex-col items-center justify-center h-[100vh]">
+    <div class="w-[100vw] flex justify-center">
+        <div class="w-[90vh] relative">
             {#if isGameOver || !started}
                 <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center">
                     {#if isGameOver}
@@ -139,7 +137,7 @@
             {/if}
             <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn} bind:fen={fen}/>
         </div>
-        <div class="bg-neutral-900 h-[30vw] p-10 flex flex-col justify-between items-center">
+        <div class="bg-neutral-900 h-[90vh] p-10 flex flex-col justify-between items-center">
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
             <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-[100%]">
                 {#if paused}
