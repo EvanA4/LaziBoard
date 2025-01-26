@@ -12,8 +12,8 @@
     // set whygameover to 1 in event listener for board-based conclusion; time-based conclusion sets whygameover to 2; 0 means not game over
     let isGameOver = $state<number>(0);
     let turn = $state<Color | undefined>();
-    let fen = $state<string>("r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4");
-    // let fen = $state<string>("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    // let fen = $state<string>("r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4"); // to test game over
+    let fen = $state<string>("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
     let started = $state<boolean>(false);
     let paused = $state<boolean>(false);
     let playerTeam = $state<string>("w");
