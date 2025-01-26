@@ -13,7 +13,7 @@ class Engine:
         self.engine.quit()
 
     def search(self, fen: str, wtime: float, btime: float):
-        # wtime and btime are in MILLISECONDS on input but converted to seconds in the play function below
+        # wtime and btime are in SECONDS
         self.board.set_fen(fen)
-        result = self.engine.play(self.board, chess.engine.Limit(white_clock=wtime/1000, black_clock=btime/1000, white_inc=0, black_inc=0))
+        result = self.engine.play(self.board, chess.engine.Limit(white_clock=wtime, black_clock=btime, white_inc=0, black_inc=0))
         return result.move.uci()

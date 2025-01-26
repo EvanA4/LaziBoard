@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { search } from '$lib/utils/engine';
     import { Chess } from 'svelte-chess';
     import '$lib/chessStyle.css';
 	import { onMount } from 'svelte';
