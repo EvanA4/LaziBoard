@@ -4,12 +4,17 @@
     import '$lib/chessStyle.css';
 	import { onMount } from 'svelte';
 	import type { Color } from 'chess.js';
+    import { timerString } from '$lib/utils/timef';
 
     import PauseImg from '$lib/assets/svgs/pause.svelte';
     import PlayImg from '$lib/assets/svgs/play.svelte';
     import RestartImg from '$lib/assets/svgs/restart.svelte';
+    import SetTimer from '$lib/components/SetTimer.svelte';
 
-    // set whygameover to 1 in event listener for board-based conclusion; time-based conclusion sets whygameover to 2; 0 means not game over
+
+    let bstart = $state<number>(300);
+    let wstart = $state<number>(300);
+
     let isGameOver = $state<number>(0);
     let turn = $state<Color | undefined>();
     // let fen = $state<string>("r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4"); // to test game over
@@ -94,18 +99,6 @@
         wsec = 300;
     }
 
-    function timerString(sec: number) {
-        let mins = Math.floor(sec / 60);
-        let secs = sec % 60;
-        
-        if (mins == 0) return secs.toFixed(1);
-        else {
-            let secsStr = secs.toFixed(1);
-            if (secsStr.length == 3) secsStr = `0${secsStr}`;
-            return `${mins}:${secsStr}`;
-        }
-    }
-
     function changeTeams() {
         chess.toggleOrientation();
         if (playerTeam == "w") playerTeam = "b";
@@ -116,8 +109,10 @@
 <div class="flex flex-col items-center justify-center h-[100vh]">
     <div class="w-[100vw] flex justify-center">
         <div class="w-[90vh] relative">
+
+
             {#if isGameOver || !started}
-                <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-50 flex flex-col items-center justify-center">
+                <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-10 flex flex-col items-center justify-center">
                     {#if isGameOver}
                         <p class="text-white text-3xl">{getWinner(turn, isGameOver)} wins!</p>
                         <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
@@ -131,11 +126,23 @@
                         </div>
                     {/if}
                 </div>
+
+                <div class="absolute bottom-[10%] left-[25%] -translate-x-[50%] z-10">
+                    <SetTimer bind:startTime={bstart}/>
+                </div>
+
+                <div class="absolute bottom-[10%] left-[75%] -translate-x-[50%] z-10">
+                    <SetTimer bind:startTime={wstart}/>
+                </div>
             {/if}
+
             {#if paused || playerTeam != turn}
                 <div class="absolute top-0 left-0 w-[100%] h-[100%] z-10"></div>
             {/if}
+
             <Chess class="cg-paper" on:move={moveListener} on:gameOver={gameOverListener} bind:this={chess} bind:turn={turn} bind:fen={fen}/>
+                
+        
         </div>
 
 
