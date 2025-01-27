@@ -100,8 +100,9 @@
         
         if (mins == 0) return secs.toFixed(1);
         else {
-            if (secs < 10) return `${mins}:0${secs.toFixed(1)}`;
-            else return `${mins}:${secs.toFixed(1)}`;
+            let secsStr = secs.toFixed(1);
+            if (secsStr.length == 3) secsStr = `0${secsStr}`;
+            return `${mins}:${secsStr}`;
         }
     }
 
@@ -138,7 +139,7 @@
         </div>
 
 
-        <div class="bg-neutral-900 h-[90vh] p-10 flex flex-col justify-between items-center">
+        <div class="bg-neutral-900 h-[90vh] flex flex-col justify-between items-center w-[200px] py-10">
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
 
             <div class="flex flex-col items-center gap-5">
