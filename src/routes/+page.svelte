@@ -150,13 +150,28 @@
             <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
 
             <div class="flex flex-col items-center gap-5">
-                <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-100">
-                    {#if paused}
-                        <PlayImg />
-                    {:else}    
-                        <PauseImg />
-                    {/if}
-                </button>
+
+
+                {#if playerTeam == turn && started}
+                    <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-100">
+                        {#if paused}
+                            <PlayImg />
+                        {:else}    
+                            <PauseImg />
+                        {/if}
+                    </button>
+                {:else}
+                    <button onclick={() => paused = !paused} class="opacity-30" disabled>
+                        {#if paused}
+                            <PlayImg />
+                        {:else}    
+                            <PauseImg />
+                        {/if}
+                    </button>
+                {/if}
+
+
+
                 {#if started && !isGameOver}
                     <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 opacity-70 hover:opacity-100 text-white hover:animate-spin">
                         <RestartImg />
