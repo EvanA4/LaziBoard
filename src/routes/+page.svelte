@@ -114,7 +114,9 @@
 
 
             {#if isGameOver || !started}
-                <div class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-10 flex flex-col items-center justify-center">
+                <div
+                    class="absolute top-0 left-0 w-[100%] h-[100%] bg-black bg-opacity-80 z-10 flex flex-col items-center justify-center"
+                >
                     {#if isGameOver}
                         <p class="text-white text-3xl">{getWinner(turn, isGameOver)} wins!</p>
                         <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Reset</button>
@@ -126,23 +128,22 @@
                                 <button onclick={changeTeams} class="px-5 py-2 rounded-lg mt-5 bg-blue-600 hover:bg-blue-500 text-white">Change Teams</button>
                             </div>
                         </div>
+    
+                        <div class="flex gap-14 mt-10">
+                            <div>
+                                <p class="text-white text-center text-3xl">Time for <b>White</b></p>
+                                <SetTimer bind:startTime={wstart}/>
+                            </div>
+                            <div>
+                                <p class="text-white text-center text-3xl">Time for <b>Black</b></p>
+                                <SetTimer bind:startTime={bstart}/>
+                            </div>
+                        </div>
                     {/if}
                 </div>
-
-                {#if !started}
-                    <div class="absolute bottom-[10%] left-[25%] -translate-x-[50%] z-10">
-                        <p class="text-white text-center text-3xl">Time for <b>White</b></p>
-                        <SetTimer bind:startTime={wstart}/>
-                    </div>
-
-                    <div class="absolute bottom-[10%] left-[75%] -translate-x-[50%] z-10">
-                        <p class="text-white text-center text-3xl">Time for <b>Black</b></p>
-                        <SetTimer bind:startTime={bstart}/>
-                    </div>
-                {/if}
             {/if}
 
-            {#if paused || playerTeam != turn}
+            {#if paused || (playerTeam != turn && started)}
                 <div class="absolute top-0 left-0 w-[100%] h-[100%] z-10"></div>
             {/if}
 

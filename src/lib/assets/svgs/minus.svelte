@@ -1,4 +1,4 @@
-<svg fill="#ffffff" width="40px" height="25px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
+<svg fill="#ffffff" width="50px" height="20px" viewBox="-3.2 -3.2 38.40 38.40" version="1.1" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff">
 
 <g id="SVGRepo_bgCarrier" stroke-width="0"/>
 
