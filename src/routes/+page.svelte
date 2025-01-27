@@ -23,8 +23,8 @@
     let paused = $state<boolean>(false);
     let playerTeam = $state<string>("w");
 
-    let bsec = $state<number>(300);
-    let wsec = $state<number>(300);
+    let bsec = $state<number>(0);
+    let wsec = $state<number>(0);
 
     let timerInterval: ReturnType<typeof setInterval>;
     let chess: any;
@@ -70,6 +70,8 @@
     }
 
     async function startGame() {
+        bsec = bstart;
+        wsec = wstart;
         started = true;
         // console.log(turn, playerTeam);
 
@@ -127,13 +129,17 @@
                     {/if}
                 </div>
 
-                <div class="absolute bottom-[10%] left-[25%] -translate-x-[50%] z-10">
-                    <SetTimer bind:startTime={bstart}/>
-                </div>
+                {#if !started}
+                    <div class="absolute bottom-[10%] left-[25%] -translate-x-[50%] z-10">
+                        <p class="text-white text-center text-3xl">Time for <b>White</b></p>
+                        <SetTimer bind:startTime={wstart}/>
+                    </div>
 
-                <div class="absolute bottom-[10%] left-[75%] -translate-x-[50%] z-10">
-                    <SetTimer bind:startTime={wstart}/>
-                </div>
+                    <div class="absolute bottom-[10%] left-[75%] -translate-x-[50%] z-10">
+                        <p class="text-white text-center text-3xl">Time for <b>Black</b></p>
+                        <SetTimer bind:startTime={bstart}/>
+                    </div>
+                {/if}
             {/if}
 
             {#if paused || playerTeam != turn}
@@ -147,11 +153,14 @@
 
 
         <div class="bg-neutral-900 h-[90vh] flex flex-col justify-between items-center w-[200px] py-10">
-            <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
+            {#if started}
+                <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bsec : wsec)}</p>
+            {:else}
+                <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? bstart : wstart)}</p>
+            {/if}
+
 
             <div class="flex flex-col items-center gap-5">
-
-
                 {#if playerTeam == turn && started}
                     <button onclick={() => paused = !paused} class="opacity-70 hover:opacity-100">
                         {#if paused}
@@ -169,9 +178,6 @@
                         {/if}
                     </button>
                 {/if}
-
-
-
                 {#if started && !isGameOver}
                     <button onclick={resetGame} class="px-5 py-2 rounded-lg mt-5 opacity-70 hover:opacity-100 text-white hover:animate-spin">
                         <RestartImg />
@@ -179,7 +185,12 @@
                 {/if}
             </div>
 
-            <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? wsec : bsec)}</p>
+
+            {#if started}
+                <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? wsec : bsec)}</p>
+            {:else}
+                <p class="text-white text-[40px]">{timerString(playerTeam == "w" ? wstart : bstart)}</p>
+            {/if}
         </div>
     </div>
 </div>
